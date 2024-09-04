@@ -7,6 +7,7 @@ import numpy as np
 
 
 class IFC_Helper:
+
     def __init__(self, file) -> None:
         self.ifc_file = ifcopenshell.open(file)
         self.file = file
@@ -264,3 +265,30 @@ class IFC_Helper:
                 return True
 
         return False
+    
+    #mörtelbett auslesen
+    def get_mortar_bed(self):
+        all_slabs = self.ifc_file.by_type("IfcSlab")
+        floor_slabs = []
+
+        for slab in all_slabs:
+            # Filterkriterien:
+            if "Mörtelbett" in slab.Name or "Fundament" in slab.Name:
+                floor_slabs.append(slab)
+        return floor_slabs
+    
+    def get_mortar_bed_Volume(self):
+        mortar_bed = self.get_mortar_bed()
+        for slab in mortar_bed:
+            wall_type_qtos = ifcopenshell.util.element.get_psets(slab)
+            data = wall_type_qtos["Qto_SlabBaseQuantities"]
+            if 'NetVolume' in data:
+                return data['NetVolume']
+    
+    def get_mortar_bed_Area(self):
+        mortar_bed = self.get_mortar_bed()
+        for slab in mortar_bed:
+            wall_type_qtos = ifcopenshell.util.element.get_psets(slab)
+            data = wall_type_qtos["Qto_SlabBaseQuantities"]
+            if 'NetArea' in data:
+                return data['NetArea']

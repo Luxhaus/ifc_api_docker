@@ -88,6 +88,13 @@ class Rooms:
                             "properties": self.extract_properties(element)
                         })
         return contained_elements
+    
+    def get_bathroom(self):
+        bathrooms = []
+        for space in self.spaces:
+            if "Bad" in space.LongName:
+                bathrooms.append(space)
+        return bathrooms
 
     def exportAsJson(self):
         self.space_data = []
@@ -105,4 +112,11 @@ class Rooms:
         # In JSON konvertieren
         return json.dumps(self.spaces_data, indent=4)
     
+    def get_room_floor(self, space):
+        for slab in self.ifc_file.by_type("IfcSlab"):
+            for rel in slab.HasAssociations:
+                print(rel)
+                #if rel.RelatingObject == space:
+                #    return slab
+
 

@@ -3,11 +3,13 @@ import ifcopenshell
 from app.modules.Rooms import Rooms
 from app.modules.Walls import Walls
 from app.modules.IFC_Helper import IFC_Helper
+from app.modules.Area_Helper import Area_Helper
 import ifcopenshell.geom
-file = "app/temp/Testprojekt2.ifc"
+file = "app/temp/Musterhaus BA.ifc"
 rooms = Rooms(file)
 
 model = ifcopenshell.open(file)
+print(type(model))
 #walls = model.by_type("IfcWall")
 
 ifc_helper = IFC_Helper(file)
@@ -73,3 +75,26 @@ print(edges)
 #innerwall = ifc_helper.is_corner_near_any_wall_surface(ifc_helper.walls[0], edges["unique_corners_wall2"])
 #print("innerwall")
 #print(innerwall)
+
+ah = Area_Helper()
+# extract netto side area of wall
+netto_side_area = ah.extract_netarea(ifc_helper.walls[0])
+print("netto_side_area")
+print(netto_side_area)
+
+
+for slab in slabs:
+    # Filterkriterien:
+    if "Mörtelbett" in slab.Name or "Fundament" in slab.Name:
+        print(slab.Name)
+        # extract netto area of slab
+        print("netto_area")
+        netto_area = ah.extract_netarea(slab)
+        print(netto_area)
+
+        print(ifc_helper.get_mortar_bed_Area())
+
+bad = rooms.get_bathroom()
+floor = ah.extract_netarea_floor(bad[0])
+print("floor")
+print(floor)
