@@ -1,4 +1,5 @@
 import ifcopenshell
+import ifcopenshell.geom
 import json
 
 class Rooms:
@@ -118,5 +119,35 @@ class Rooms:
                 print(rel)
                 #if rel.RelatingObject == space:
                 #    return slab
+    
+    def get_walls(self, space):
+        walls = []
+        for rel in self.ifc_file.by_type('IfcRelSpaceBoundary'):
+            if rel.RelatingSpace == space:
+                walls.append({
+                    "type": rel.RelatedBuildingElement.is_a(),
+                    "name": rel.RelatedBuildingElement.Name,
+                    "properties": self.extract_properties(rel.RelatedBuildingElement)
+                })
+        return walls
+    
+    def is_within_or_intersects(bbox1, bbox2):
+        # Prüfe auf Überlappung der Bounding Boxes
+        return not (bbox1.max.x < bbox2.min.x or
+                    bbox1.min.x > bbox2.max.x or
+                    bbox1.max.y < bbox2.min.y or
+                    bbox1.min.y > bbox2.max.y or
+                    bbox1.max.z < bbox2.min.z or
+                    bbox1.min.z > bbox2.max.z)
+    
+    def get_walls_by_geometry(self, space):
+        # Schleife durch alle Wände und prüfe die räumliche Beziehung
+        space_bbox = ifcopenshell.geom.bounding_box(space)
+        walls = self.ifc_file.by_type("IfcWall")
+        for wall in walls:
+            wall_bbox = ifcopenshell.geom.bounding_box(wall)
+            if self.is_within_or_intersects(space_bbox, wall_bbox):
+                print(f"Wall ID {wall.id()} encloses the space")
+                # Weitere Verarbeitung der Wandflächen
 
 

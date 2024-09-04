@@ -98,3 +98,47 @@ bad = rooms.get_bathroom()
 floor = ah.extract_netarea_floor(bad[0])
 print("floor")
 print(floor)
+
+def calculate_area(mesh):
+    vertices = mesh.verts  # Liste der Vertices
+    faces = mesh.faces      # Liste der Indizes, die die Dreiecke beschreiben
+    
+    area = 0.0
+    for i in range(0, len(faces), 3):
+        idx1, idx2, idx3 = faces[i], faces[i+1], faces[i+2]
+        v1 = vertices[idx1*3:idx1*3+3]
+        v2 = vertices[idx2*3:idx2*3+3]
+        v3 = vertices[idx3*3:idx3*3+3]
+
+        # Berechnung des Flächeninhalts des Dreiecks über den Kreuzprodukt
+        edge1 = [v2[j] - v1[j] for j in range(3)]
+        edge2 = [v3[j] - v1[j] for j in range(3)]
+        cross_product = [edge1[1]*edge2[2] - edge1[2]*edge2[1],
+                        edge1[2]*edge2[0] - edge1[0]*edge2[2],
+                        edge1[0]*edge2[1] - edge1[1]*edge2[0]]
+        triangle_area = 0.5 * (sum([cross_product[j]**2 for j in range(3)]) ** 0.5)
+        area += triangle_area
+
+    return area
+
+
+# get all walls of the room
+#walls = rooms.get_walls_by_geometry(bad[0])
+settings = ifcopenshell.geom.settings()
+shape = ifcopenshell.geom.create_shape(settings, rooms.get_bathroom()[0])
+
+# Zugriff auf die Mesh-Daten
+mesh = shape.geometry
+
+area = calculate_area(mesh) - floor*2
+print(f"Die Fläche des Raums beträgt: {area:.2f} Quadratmeter")
+
+# Öffnungen (IfcOpeningElement) identifizieren
+openings = model.by_type('IfcOpeningElement')
+
+# Suche nach Öffnungen, die mit einer Wand verknüpft sind, die den Raum umschließt
+relevant_openings = []
+for opening in openings:
+    related_walls = opening.HasFillings  # Öffnungen sind mit Wänden oder anderen Bauteilen verknüpft
+    for wall in related_walls:
+        print(wall)
