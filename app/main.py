@@ -52,8 +52,7 @@ async def create_upload_file(file_upload: UploadFile):
 @app.post("/uploadfile/")
 async def create_upload_file(file: UploadFile = File(...)):
     contents = await file.read()
-    save_to = UPLOAD_DIR / contents.filename
-    # File is saved in a temporary directory
+    save_to = UPLOAD_DIR / file.filename
     with open(save_to, "wb") as file_object:
         file_object.write(contents)
     return {"filename": file.filename}
