@@ -142,3 +142,7 @@ for opening in openings:
     related_walls = opening.HasFillings  # Öffnungen sind mit Wänden oder anderen Bauteilen verknüpft
     for wall in related_walls:
         print(wall)
+
+# get json of walls
+walls = Walls(file)
+print(walls.exportAsJson())

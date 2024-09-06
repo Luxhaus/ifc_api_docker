@@ -1,11 +1,13 @@
 import ifcopenshell
 import json
+from app.modules.Area_Helper import Area_Helper
 
 class Walls:
     def __init__(self, file):
         self.ifc_file = ifcopenshell.open(file)
         self.walls = self.ifc_file.by_type("IfcWall")
         self.walls_data = []
+        self.area_helper = Area_Helper()
     
     def extract_properties(self, element):
         properties = {}
@@ -69,4 +71,14 @@ class Walls:
                         if quantity.is_a('IfcQuantityArea') and quantity.Name == "GrossArea":
                             return quantity.AreaValue
         return None
-                        
+                
+    def exportAsJson(self):
+        self.walls_data = []
+        for wall in self.walls:
+            walls_data = {
+                "name": wall.Name,
+                "net_area": self.area_helper.extract_netside_area_wall(wall),
+            }
+            self.walls_data.append(walls_data)
+            print(walls_data)
+        return json.dumps(self.walls_data, indent=4)
