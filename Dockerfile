@@ -9,6 +9,9 @@ RUN pip install --no-cache-dir -r /code/requirements.txt
 
 COPY ./app /code/app
 
+#create temp folder
+RUN mkdir /code/app/temp
+
 CMD ["uvicorn", "app.main:app", "--host",  "0.0.0.0", "--port", "80"]
 
 EXPOSE 80
