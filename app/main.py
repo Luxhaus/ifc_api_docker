@@ -50,19 +50,20 @@ async def create_upload_file(file_upload: UploadFile):
 
 # file upload via webservice
 @app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
+async def create_upload_file(element1: UploadFile = File(...)):
+    file = element1
     contents = await file.read()
     save_to = UPLOAD_DIR / file.filename
     with open(save_to, "wb") as file_object:
         file_object.write(contents)
     return {"filename": file.filename}
 
+
 # print raw http-request for debugging purposes
 @app.post("/debugging/")
 async def show_request(request: Request):
     body = await request.body()
     return {"request": body}
-
 
 # get rooms by filename
 @app.get("{filename}/rooms/")
