@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import FastAPI, File, UploadFile, Response
+from fastapi import FastAPI, File, Request, UploadFile, Response
 from fastapi.responses import HTMLResponse
 from .modules.Rooms import Rooms
 from .modules.Walls import Walls
@@ -56,6 +56,13 @@ async def create_upload_file(file: UploadFile = File(...)):
     with open(save_to, "wb") as file_object:
         file_object.write(contents)
     return {"filename": file.filename}
+
+# print raw http-request for debugging purposes
+@app.post("/debugging/")
+async def show_request(request: Request):
+    body = await request.body()
+    return {"request": body}
+
 
 # get rooms by filename
 @app.get("{filename}/rooms/")
