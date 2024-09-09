@@ -63,6 +63,7 @@ async def create_upload_file(element1: UploadFile = File(...)):
 @app.post("/debugging/")
 async def show_request(request: Request):
     body = await request.body()
+    print (body)
     return {"request": body}
 
 # get rooms by filename
