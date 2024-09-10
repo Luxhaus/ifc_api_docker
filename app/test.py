@@ -1,10 +1,12 @@
 import json
 import ifcopenshell
-from app.modules.Rooms import Rooms
-from app.modules.Walls import Walls
-from app.modules.IFC_Helper import IFC_Helper
-from app.modules.Area_Helper import Area_Helper
+from app.modules.classes.Rooms import Rooms
+from app.modules.classes.Walls import Walls
+from app.modules.classes.IFC_Helper import IFC_Helper
+from app.modules.classes.Area_Helper import Area_Helper
 import ifcopenshell.geom
+from app.modules._walls import run
+
 file = "app/temp/Musterhaus BA.ifc"
 rooms = Rooms(file)
 
@@ -143,6 +145,28 @@ for opening in openings:
     for wall in related_walls:
         print(wall)
 
-# get json of walls
-walls = Walls(file)
-print(walls.exportAsJson())
+# get connected Walls
+#walls = ifc_helper.get_Connected_Elements2(ifc_helper.walls[0])
+
+#print("connected walls")
+#print(walls)
+print("direction info")
+count = 0
+for wall in ifc_helper.walls:
+    #info = ifc_helper.get_Connection_Info(ifc_helper.walls[0], wall)
+    count += 1
+    info = ifc_helper.get_direction(wall)
+    if info is not None:
+        #pass
+        #count += 1
+        print(wall.Name)
+        print(info)
+    else:
+        #print(wall.Name)
+        pass
+        #print("no direction at wall ")
+        #print(wall.Name)
+    #print(info)
+print(count)
+ifc_file = ifcopenshell.open(file)
+print(run(ifc_file))

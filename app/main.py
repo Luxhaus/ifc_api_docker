@@ -1,9 +1,15 @@
 from typing import Optional
 from fastapi import FastAPI, File, Request, UploadFile, Response
 from fastapi.responses import HTMLResponse
-from .modules.Rooms import Rooms
-from .modules.Walls import Walls
+from .modules import imports
+import os
+import sys
+import json
+import math
 from pathlib import Path
+import ifcopenshell
+import importlib.util
+
 
 app = FastAPI()
 UPLOAD_DIR = Path.cwd() / "app" / "temp"
@@ -28,6 +34,7 @@ def generate_html_response():
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
     return generate_html_response()
+
     
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Optional[str] = None):
@@ -43,7 +50,7 @@ async def create_upload_file(file_upload: UploadFile):
         file_object.write(data)
 
     # Create a Rooms object with the uploaded file
-    rooms = Rooms(save_to)
+    rooms = imports.Rooms(save_to)
     json = rooms.exportAsJson()
     return Response(content=json, media_type="application/json")
     
@@ -66,12 +73,6 @@ async def show_request(request: Request):
     print (body)
     return {"request": body}
 
-# get rooms by filename
-@app.get("{filename}/rooms/")
-async def get_rooms(filename: str):
-    rooms = Rooms(UPLOAD_DIR / filename)
-    return rooms.exportAsJson()
-
 # get walls by filename
 @app.get("/project/{filename}/walls/")
 async def get_walls(filename: str):
@@ -80,6 +81,34 @@ async def get_walls(filename: str):
     # handle url coding in filename
     filename = filename.replace("%20", " ")
 
-    walls = Walls(UPLOAD_DIR / filename)
+    walls = imports.Walls(UPLOAD_DIR / filename)
     json =  walls.exportAsJson()
     return Response(content=json, media_type="application/json")
+
+def load_modules():
+    module_folder = Path.cwd() / "app" / "modules"
+    load_modules = []
+    for filename in os.listdir(module_folder):
+        if filename.endswith(".py") and filename.startswith("_"):
+            load_modules.append(filename[:-3])
+            module_path = os.path.join(module_folder, filename)
+
+            spec = importlib.util.spec_from_file_location(filename, module_path)
+            module = importlib.util.module_from_spec(spec)
+            module.imports = imports
+            spec.loader.exec_module(module)
+
+            load_modules.append(module)
+
+    return load_modules
+
+@app.get("/project/{filename}/items/")
+async def get_items(filename: str):
+    ifc_file = ifcopenshell.open(UPLOAD_DIR / filename)
+    modules = load_modules()
+    results = []
+    for module in modules:
+        if(hasattr(module, "run")):
+            results.append(module.run(ifc_file))
+
+    return results

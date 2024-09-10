@@ -1,9 +1,9 @@
 import unittest
 import ifcopenshell
-from app.modules.Rooms import Rooms
-from app.modules.Walls import Walls
-from app.modules.IFC_Helper import IFC_Helper
-from app.modules.Area_Helper import Area_Helper
+from app.modules.classes.Rooms import Rooms
+from app.modules.classes.Walls import Walls
+from app.modules.classes.IFC_Helper import IFC_Helper
+from app.modules.classes.Area_Helper import Area_Helper
 import ifcopenshell.geom
 file = "app/temp/Musterhaus BA.ifc"
 rooms = Rooms(file)
