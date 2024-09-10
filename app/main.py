@@ -109,6 +109,6 @@ async def get_items(filename: str):
     results = []
     for module in modules:
         if(hasattr(module, "run")):
-            results.append(module.run(ifc_file))
+            results = results + module.run(ifc_file)
 
     return results
