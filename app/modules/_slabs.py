@@ -1,0 +1,17 @@
+# nicht vergessen die Importe auszukommentieren nach dem Test
+from app.modules import imports
+
+def run(ifc_file):
+    # get walls
+    slabs = ifc_file.by_type("IfcSlab")
+    area_helper = imports.Area_Helper()
+    slabs_data = []
+    data = []
+    for slab in slabs:
+        slabs_data = {
+            "name": slab.Name,
+            "id": slab.id(),
+            "net_area": area_helper.extract_netarea(slab),
+        }
+        data.append(slabs_data)
+    return data
