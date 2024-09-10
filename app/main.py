@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import FastAPI, File, Request, UploadFile, Response
 from fastapi.responses import HTMLResponse
-from .modules import imports
+from app.modules import imports
 import os
 import sys
 import json
