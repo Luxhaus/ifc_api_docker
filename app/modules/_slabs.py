@@ -12,6 +12,9 @@ def run(ifc_file):
             "name": slab.Name,
             "id": slab.id(),
             "net_area": area_helper.extract_netarea(slab),
+            "type": slab.is_a(),
+            "type_identifier": slab.IsTypedBy[0].RelatingType.GlobalId,
+            "type_name": slab.IsTypedBy[0].RelatingType.Name
         }
         data.append(slabs_data)
     return data

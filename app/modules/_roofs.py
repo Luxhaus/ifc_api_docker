@@ -12,6 +12,9 @@ def run(ifc_file):
             "name": element.Name,
             "id": element.id(),
             "net_area": area_helper.extract_netarea(element),
+            "type": element.is_a(),
+            "type_identifier": element.IsTypedBy[0].RelatingType.GlobalId,
+            "type_name": element.IsTypedBy[0].RelatingType.Name
         }
         data.append(element_data)
     return data
