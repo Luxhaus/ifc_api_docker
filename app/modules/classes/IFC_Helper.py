@@ -388,3 +388,50 @@ class IFC_Helper:
             if element in rel.RelatedElements:
                 return rel.RelatingStructure.Elevation
         return None
+    
+    # extract floor/level name that the element is on
+    def get_level(self, element):
+        for rel in self.ifc_file.by_type('IfcRelContainedInSpatialStructure'):
+            if element in rel.RelatedElements:
+                return rel.RelatingStructure.Name
+        return None
+    
+    # find space that the element has a relation to
+    def get_room_name(self, element):
+        # Suche nach allen IfcRelSpaceBoundary Beziehungen
+        space_boundaries = self.ifc_file.by_type("IfcRelSpaceBoundary")
+        
+        for boundary in space_boundaries:
+            # Überprüfe, ob das gegebene Element in der Boundary Beziehung steht
+            if boundary.RelatedBuildingElement == element:
+                # Der Raum steht im Attribut RelatingSpace
+                raum = boundary.RelatingSpace
+                if raum:
+                    return raum.LongName
+        return None
+    
+    def get_room(self, element):
+        # Suche nach allen IfcRelSpaceBoundary Beziehungen
+        space_boundaries = self.ifc_file.by_type("IfcRelSpaceBoundary")
+        
+        for boundary in space_boundaries:
+            # Überprüfe, ob das gegebene Element in der Boundary Beziehung steht
+            if boundary.RelatedBuildingElement == element:
+                # Der Raum steht im Attribut RelatingSpace
+                raum = boundary.RelatingSpace
+                if raum:
+                    return raum
+        return None
+    
+    def get_room_id(self, element):
+                # Suche nach allen IfcRelSpaceBoundary Beziehungen
+        space_boundaries = self.ifc_file.by_type("IfcRelSpaceBoundary")
+        
+        for boundary in space_boundaries:
+            # Überprüfe, ob das gegebene Element in der Boundary Beziehung steht
+            if boundary.RelatedBuildingElement == element:
+                # Der Raum steht im Attribut RelatingSpace
+                raum = boundary.RelatingSpace
+                if raum:
+                    return raum.id()
+        return None

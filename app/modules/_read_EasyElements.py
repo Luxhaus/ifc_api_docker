@@ -3,10 +3,11 @@ from app.modules import imports
 
 def run(ifc_file):
     area_helper = imports.Area_Helper()
+    ifc_helper = imports.IFC_Helper(ifc_file)
     # get walls
     list = ["IfcWall", "IfcWindow", "IfcRoof", "IfcSlab", "IfcSpace", "IfcDoor"]
-    elements = imports.IFC_Helper(ifc_file).get_roofs()
-    elements = elements + imports.IFC_Helper(ifc_file).get_floorings()
+    elements = ifc_helper.get_roofs()
+    elements = elements + ifc_helper.get_floorings()
     print(elements)
     for element in list:
         elements = elements + ifc_file.by_type(element)
@@ -28,8 +29,13 @@ def run(ifc_file):
             "NetVolume": area_helper.extract_value(element, "NetVolume"),
             "NetArea": area_helper.extract_value(element, "NetArea"),
             "type": element.is_a(),
-  "type_identifier": element.IsTypedBy[0].RelatingType.GlobalId if element.IsTypedBy and len(element.IsTypedBy) > 0 else None,
-    "type_name": element.IsTypedBy[0].RelatingType.Name if element.IsTypedBy and len(element.IsTypedBy) > 0 else None
+            "type_identifier": element.IsTypedBy[0].RelatingType.GlobalId if element.IsTypedBy and len(element.IsTypedBy) > 0 else None,
+            "type_name": element.IsTypedBy[0].RelatingType.Name if element.IsTypedBy and len(element.IsTypedBy) > 0 else None,
+            "level" : ifc_helper.get_level(element),
+            "elevation": ifc_helper.get_elevation(element),
+            "room_name": ifc_helper.get_room_name(element),
+            "room_id": ifc_helper.get_room_id(element)
+
         }
         
         data.append(_data)

@@ -11,5 +11,5 @@ list = []
 #list = list + _slabs.run(ifc_file)
 #list = list + _floorings.run(ifc_file)
 list = list + _read_EasyElements.run(ifc_file)
-print(len(list))
+print(list)
 #print(_walls.run(ifc_file))
