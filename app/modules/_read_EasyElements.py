@@ -28,8 +28,8 @@ def run(ifc_file):
             "NetVolume": area_helper.extract_value(element, "NetVolume"),
             "NetArea": area_helper.extract_value(element, "NetArea"),
             "type": element.is_a(),
-            "type_identifier": element.IsTypedBy[0].RelatingType.GlobalId,
-            "type_name": element.IsTypedBy[0].RelatingType.Name,
+  "type_identifier": element.IsTypedBy[0].RelatingType.GlobalId if element.IsTypedBy and len(element.IsTypedBy) > 0 else None,
+    "type_name": element.IsTypedBy[0].RelatingType.Name if element.IsTypedBy and len(element.IsTypedBy) > 0 else None
         }
         
         data.append(_data)

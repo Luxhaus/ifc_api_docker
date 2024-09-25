@@ -1,7 +1,7 @@
 from app.modules import _read_EasyElements #, _roofs, _walls, _slabs, _floorings, _spaces, _windows, _doors
 from app.modules import imports
 
-file = "app/temp/Musterhaus BA (3).ifc"
+file = "app/temp/Musterhaus BA mit Dach.ifc"
 
 ifc_file = imports.ifcopenshell.open(file)
 
