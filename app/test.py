@@ -7,7 +7,7 @@ from app.modules.classes.Area_Helper import Area_Helper
 import ifcopenshell.geom
 from app.modules._walls import run
 
-file = "app/temp/Musterhaus BA.ifc"
+file = "app/temp/Musterhaus BA (2).ifc"
 rooms = Rooms(file)
 
 model = ifcopenshell.open(file)
@@ -154,19 +154,59 @@ print("direction info")
 count = 0
 for wall in ifc_helper.walls:
     #info = ifc_helper.get_Connection_Info(ifc_helper.walls[0], wall)
-    count += 1
+    #count += 1
     info = ifc_helper.get_direction(wall)
+    
     if info is not None:
-        #pass
+        pass
         #count += 1
-        print(wall.Name)
-        print(info)
+        #print(wall.Name)
+        #print(info)
+        #print(ifc_helper.get_geometry(wall))
     else:
         #print(wall.Name)
-        pass
+        
+        count += 1
         #print("no direction at wall ")
         #print(wall.Name)
     #print(info)
 print(count)
-ifc_file = ifcopenshell.open(file)
-print(run(ifc_file))
+
+# get room of wall
+bad = rooms.get_bathroom()
+elements = ifc_helper.get_boundaries(bad[0])
+print("elements")
+print(elements)
+
+# get wall by guid
+wall = ifc_helper.get_element_by_guid("1fvJUdD3nFmhMT1oKLY5nC")
+print("wall")
+
+#get floors above
+floors = ifc_helper.get_floors_above(wall)
+print("floors")
+walls = model.by_type("IfcWall")
+floors = model.by_type("IfcSlab")
+
+
+geschosse = model.by_type("IfcBuildingStorey")
+
+# Finde das Geschoss, in dem die Wand enthalten ist
+contain = wall.ContainedInStructure
+print("contain")
+print(contain)
+if len(contain) > 0:
+    relating_structure = contain[0].RelatingStructure
+    print("relating_structure")
+    print(relating_structure)
+    print(geschosse)
+    for floor in geschosse:
+        if(floor.GlobalId == relating_structure.GlobalId):
+        # print level of floor
+            print(floor.Name)
+            print(floor.Elevation)
+
+# elevation of wall
+elevation = ifc_helper.get_elevation(wall)
+print("elevation")
+print(elevation)

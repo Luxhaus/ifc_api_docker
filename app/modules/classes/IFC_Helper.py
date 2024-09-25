@@ -358,3 +358,33 @@ class IFC_Helper:
                 return None
            
         return None
+    
+    def get_boundaries(self, room):
+        boundaries = []
+        for rel in self.ifc_file.by_type('IfcRelSpaceBoundary'):
+            if rel.RelatingSpace.GlobalId == room.GlobalId:
+                #        print(rel.RelatedBuildingElement.Name)
+                #        print(rel.InternalOrExternalBoundary)
+                #        print(rel.PhysicalOrVirtualBoundary)
+                #        print(rel.ConnectionGeometry)
+                boundaries.append(rel.RelatedBuildingElement)
+        return boundaries
+
+    def get_element_by_guid(self, guid):
+        element = self.ifc_file.by_guid(guid)
+        return element
+    
+    # überarbeiten
+    def get_floors_above(self, element):
+        floors = []
+        for rel in self.ifc_file.by_type('IfcRelContainedInSpatialStructure'):
+            if rel.RelatedElements[0] == element:
+                for floor in rel.RelatingStructure.ContainsElements:
+                    floors.append(floor)
+        return floors
+    
+    def get_elevation(self, element):
+        for rel in self.ifc_file.by_type('IfcRelContainedInSpatialStructure'):
+            if element in rel.RelatedElements:
+                return rel.RelatingStructure.Elevation
+        return None
