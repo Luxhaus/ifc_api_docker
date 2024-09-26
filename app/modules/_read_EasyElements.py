@@ -34,8 +34,9 @@ def run(ifc_file):
             "level" : ifc_helper.get_level(element),
             "elevation": ifc_helper.get_elevation(element),
             "room_name": ifc_helper.get_room_name(element),
-            "room_id": ifc_helper.get_room_id(element)
-
+            "room_id": ifc_helper.get_room_id(element),
+            "is_external": area_helper.extract_CommonPSetValue(element, "IsExternal"),
+            "termal_transmittance": area_helper.extract_CommonPSetValue(element, "ThermalTransmittance")
         }
         
         data.append(_data)

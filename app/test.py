@@ -210,3 +210,4 @@ if len(contain) > 0:
 elevation = ifc_helper.get_elevation(wall)
 print("elevation")
 print(elevation)
+

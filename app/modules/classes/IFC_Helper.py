@@ -435,3 +435,10 @@ class IFC_Helper:
                 if raum:
                     return raum.id()
         return None
+    
+    def is_external(self, element):
+        for rel in self.ifc_file.by_type('IfcRelSpaceBoundary'):
+            if rel.RelatedBuildingElement == element:
+                if rel.InternalOrExternalBoundary == 'EXTERNAL':
+                    return True
+        return False
