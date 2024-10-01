@@ -36,7 +36,8 @@ def run(ifc_file):
             "room_name": ifc_helper.get_room_name(element),
             "room_id": ifc_helper.get_room_id(element),
             "is_external": area_helper.extract_CommonPSetValue(element, "IsExternal"),
-            "termal_transmittance": area_helper.extract_CommonPSetValue(element, "ThermalTransmittance")
+            "termal_transmittance": area_helper.extract_CommonPSetValue(element, "ThermalTransmittance"),
+            "wandstaerke": area_helper.extract_psetValue(element, "Vollständige Legende", "Wandstärke")
         }
         
         data.append(_data)

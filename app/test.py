@@ -5,7 +5,7 @@ from app.modules.classes.Walls import Walls
 from app.modules.classes.IFC_Helper import IFC_Helper
 from app.modules.classes.Area_Helper import Area_Helper
 import ifcopenshell.geom
-from app.modules._walls import run
+
 
 file = "app/temp/Musterhaus BA (2).ifc"
 rooms = Rooms(file)
@@ -79,10 +79,15 @@ print(edges)
 #print(innerwall)
 
 ah = Area_Helper()
+
+# Hole alle Türen
+doors = model.by_type("IfcDoor")
+wandstaerke = ah.extract_psetValue(doors[1], "Vollständige Legende", "Wandstärke")
+print(wandstaerke)
 # extract netto side area of wall
-netto_side_area = ah.extract_netarea(ifc_helper.walls[0])
-print("netto_side_area")
-print(netto_side_area)
+#netto_side_area = ah.extract_netarea(ifc_helper.walls[0])
+#print("netto_side_area")
+#print(netto_side_area)
 
 
 for slab in slabs:
