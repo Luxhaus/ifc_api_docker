@@ -11,12 +11,11 @@ list = []
 #list = list + _roofs.run(ifc_file)
 #list = list + _slabs.run(ifc_file)
 #list = list + _floorings.run(ifc_file)
-#list = list + _read_EasyElements.run(ifc_file)
-#print(list)
+list = list + _read_EasyElements.run(ifc_file)
+print(list)
 #print(_walls.run(ifc_file))
 
-project = ifc_file.by_type("IfcProject")
-print(project)
-print(project[0].get_info())
-print(project[0].LongName)
-print(project[0].id())
+#project = ifc_file.by_type("IfcProject")
+
+#print(project[0].get_info())
+#get openings

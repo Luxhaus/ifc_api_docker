@@ -5,7 +5,7 @@ def run(ifc_file):
     area_helper = imports.Area_Helper()
     ifc_helper = imports.IFC_Helper(ifc_file)
     # get walls
-    list = ["IfcWall", "IfcWindow", "IfcRoof", "IfcSlab", "IfcSpace", "IfcDoor"]
+    list = ["IfcWall", "IfcWindow", "IfcRoof", "IfcSlab", "IfcSpace", "IfcDoor", "IfcBuildingElementProxy", "IfcOpeningElement"]
     elements = ifc_helper.get_roofs()
     elements = elements + ifc_helper.get_floorings()
     print(elements)
