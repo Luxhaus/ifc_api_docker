@@ -9,13 +9,13 @@ def run(ifc_file):
     print(project[0].get_info())
     print(project[0].LongName)
     
-
-    data = {
+    data = []
+    _data = {
         "name": project[0].LongName,
         "id": project[0].id(),
         "type_identifier": "IfcProject",
         "type_name": "Project",
         "type": "IfcProject",
     }
-        
+    data.append(_data)
     return data
