@@ -12,10 +12,10 @@ list = []
 #list = list + _slabs.run(ifc_file)
 #list = list + _floorings.run(ifc_file)
 list = list + _read_EasyElements.run(ifc_file)
-print(list)
+#print(list)
 #print(_walls.run(ifc_file))
 
-#project = ifc_file.by_type("IfcProject")
+project = ifc_file.by_type("IfcBuildingStorey")
 
-#print(project[0].get_info())
-#get openings
+# get material
+

@@ -442,3 +442,5 @@ class IFC_Helper:
                 if rel.InternalOrExternalBoundary == 'EXTERNAL':
                     return True
         return False
+    
+    
